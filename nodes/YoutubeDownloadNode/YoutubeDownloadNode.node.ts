@@ -30,6 +30,7 @@ export class YoutubeDownloadNode implements INodeType {
 				default: '',
 				placeholder: 'eg: https://www.youtube.com/watch?v=',
 				description: 'URL of the video to download',
+				required: true,
 			},
 			{
 				displayName: 'Property Name',
