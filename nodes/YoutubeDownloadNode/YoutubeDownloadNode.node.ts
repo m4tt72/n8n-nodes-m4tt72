@@ -100,7 +100,7 @@ export class YoutubeDownloadNode implements INodeType {
 				}
 
 				newItem.binary![dataPropertyName] = await this.helpers.prepareBinaryData(data, filePath);
-				newItem.json = info as IDataObject;
+				newItem.json['videoInfo'] = info;
 
 				returnData.push(newItem);
 			} catch (error) {
