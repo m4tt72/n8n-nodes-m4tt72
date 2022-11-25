@@ -48,11 +48,10 @@ export class YoutubeDownloadNode implements INodeType {
 
 		let item: INodeExecutionData;
 		const returnData: INodeExecutionData[] = [];
-		let url: string;
 
 		for (let itemIndex = 0; itemIndex < items.length; itemIndex++) {
 			try {
-				url = this.getNodeParameter('url', itemIndex, '') as string;
+				const url = this.getNodeParameter('url', itemIndex, '') as string;
 				const dataPropertyName = this.getNodeParameter('dataPropertyName', itemIndex) as string;
 
 				item = items[itemIndex];
@@ -62,7 +61,6 @@ export class YoutubeDownloadNode implements INodeType {
 					noCheckCertificates: true,
 					noWarnings: true,
 					addHeader: ['referer:youtube.com', 'user-agent:googlebot'],
-					format: 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
 				});
 
 				await youtubedl.exec(url, {
@@ -107,7 +105,11 @@ export class YoutubeDownloadNode implements INodeType {
 				returnData.push(newItem);
 			} catch (error) {
 				if (this.continueOnFail()) {
-					items.push({ json: this.getInputData(itemIndex)[0].json, error, pairedItem: itemIndex });
+					returnData.push({
+						json: this.getInputData(itemIndex)[0].json,
+						error,
+						pairedItem: itemIndex,
+					});
 				} else {
 					if (error.context) {
 						error.context.itemIndex = itemIndex;
