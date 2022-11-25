@@ -1,6 +1,6 @@
 {
 	"name": "n8n-nodes-m4tt72",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"description": "M4TT72 collection of N8N nodes",
 	"keywords": [
 		"n8n-community-node-package"
