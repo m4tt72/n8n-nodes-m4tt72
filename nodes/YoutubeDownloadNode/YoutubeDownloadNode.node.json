@@ -1,0 +1,18 @@
+{
+	"node": "n8n-nodes-m4tt72.youtubedownloadnode",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["M4TT72"],
+	"resources": {
+		"credentialDocumentation": [
+			{
+				"url": "https://github.com/m4tt72/n8n-nodes-m4tt72"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "https://github.com/m4tt72/n8n-nodes-m4tt72"
+			}
+		]
+	}
+}
