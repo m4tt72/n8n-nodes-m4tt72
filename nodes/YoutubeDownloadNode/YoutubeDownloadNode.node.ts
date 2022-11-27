@@ -7,7 +7,7 @@ import {
 	INodeTypeDescription,
 	NodeOperationError,
 } from 'n8n-workflow';
-import youtubedl from 'youtube-dl-exec';
+import YoutubeDL from 'youtube-dl-exec';
 
 export class YoutubeDownloadNode implements INodeType {
 	description: INodeTypeDescription = {
@@ -51,31 +51,31 @@ export class YoutubeDownloadNode implements INodeType {
 
 		for (let itemIndex = 0; itemIndex < items.length; itemIndex++) {
 			try {
-				const url = this.getNodeParameter('url', itemIndex, '') as string;
+				const url = this.getNodeParameter('url', itemIndex) as string;
 				const dataPropertyName = this.getNodeParameter('dataPropertyName', itemIndex) as string;
 
 				item = items[itemIndex];
 
-				const info = await youtubedl(url, {
+				const metadata = await YoutubeDL(url, {
 					dumpSingleJson: true,
 					noCheckCertificates: true,
 					noWarnings: true,
 					addHeader: ['referer:youtube.com', 'user-agent:googlebot'],
 				});
 
-				await youtubedl.exec(url, {
+				await YoutubeDL.exec(url, {
 					noCheckCertificates: true,
 					noWarnings: true,
 					addHeader: ['referer:youtube.com', 'user-agent:googlebot'],
-					output: '%(id)s.%(ext)s',
+					output: '/tmp/%(id)s.%(ext)s',
 				});
 
-				const filePath = `${info.id}.${info.ext}`;
+				const filePath = `/tmp/${metadata.id}.${metadata.ext}`;
 
-				let data;
+				let data: Buffer;
 
 				try {
-					data = (await fsReadFile(filePath)) as Buffer;
+					data = await fsReadFile(filePath);
 				} catch (error) {
 					if (error.code === 'ENOENT') {
 						throw new NodeOperationError(
@@ -100,7 +100,7 @@ export class YoutubeDownloadNode implements INodeType {
 				}
 
 				newItem.binary![dataPropertyName] = await this.helpers.prepareBinaryData(data, filePath);
-				newItem.json['videoInfo'] = info;
+				newItem.json['metadata'] = metadata;
 
 				returnData.push(newItem);
 			} catch (error) {
